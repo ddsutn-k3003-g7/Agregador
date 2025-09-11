@@ -193,22 +193,28 @@ public class Fachada implements FachadaAgregador {
 
     @Override
     public void setConsensoStrategy(ConsensosEnum tipoConsenso, String coleccionId) throws InvalidParameterException{
+        log.info("seteando el consenso");
         // 1. Validación de parámetros
     if (tipoConsenso == null) {
+        log.info("el tipo de consenso es nulo");
         throw new InvalidParameterException("El tipo de consenso no puede ser nulo");
     }
     
     if (coleccionId == null || coleccionId.trim().isEmpty()) {
+        log.info("la coleccion no existe");
         throw new InvalidParameterException("El ID de colección no puede ser nulo o vacío");
     }
         // 2. Verificar si ya existe un consenso para la colección
     val existingConsenso = this.consensoRepository.findById(coleccionId);
     if (existingConsenso.isPresent()) {
+        log.info("ya existe el consenso para la coleccion");
         throw new IllegalArgumentException("Ya existe un consenso para la colección con ID: " + coleccionId);
     }
     
         // 3. Crear y guardar el nuevo consenso 
+    log.info("creando el consenso");
     Consenso nuevoConsenso = new Consenso(tipoConsenso, coleccionId);
+    log.info("guardando el nuevo consenso");
     this.consensoRepository.saveConsenso(nuevoConsenso, coleccionId);
 
     val consenso = this.consensoRepository.findById(coleccionId);
