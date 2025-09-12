@@ -56,6 +56,8 @@ public class Fachada implements FachadaAgregador {
     public Fachada(FuenteRepository fuenteRepository, ConsensoRepository consensoRepository) {
         this.fuenteRepository = fuenteRepository; // Inyecta el repositorio de fuentes
         this.consensoRepository = consensoRepository; // Inyecta el repositorio de consensos
+        
+        //setear objectMapper
         this.objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -63,6 +65,20 @@ public class Fachada implements FachadaAgregador {
         var sdf = new SimpleDateFormat(Constants.DEFAULT_SERIALIZATION_FORMAT, Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         objectMapper.setDateFormat(sdf);
+        
+        //cargar fuentes desde postgres
+        List<Fuente> fuentes = fuenteRepository.findAll();
+        fachadas.clear(); // Limpiar mapa existente
+        
+        fuentes.forEach(fuente -> {
+            FachadaFuente fachada = new FuentesProxy(
+            objectMapper,
+            fuente.getEndpoint()
+        );
+            fachadas.put(fuente.getId(), fachada);
+        });
+        
+        log.info("Cargadas {} fachadas desde la base de datos", fachadas.size());
     }
 
     @Override
@@ -115,6 +131,9 @@ public class Fachada implements FachadaAgregador {
 
         //obtener las fachadas de fuentes
         log.info("obteniendo fachadas");
+        if (fachadas.isEmpty()) {
+            
+        }
         List<FachadaFuente> listaFachadas = new ArrayList<>(fachadas.values());
         if (listaFachadas.size() == 0) {
             log.info("no hay fachadas en la lista");
@@ -208,7 +227,6 @@ public class Fachada implements FachadaAgregador {
     val existingConsenso = this.consensoRepository.findById(coleccionId);
     if (existingConsenso.isPresent()) {
         log.info("ya existe el consenso para la coleccion");
-        throw new IllegalArgumentException("Ya existe un consenso para la colección con ID: " + coleccionId);
     }
     
         // 3. Crear y guardar el nuevo consenso 
