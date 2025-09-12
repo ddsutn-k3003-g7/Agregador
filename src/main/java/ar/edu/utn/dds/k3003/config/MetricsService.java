@@ -2,6 +2,8 @@ package ar.edu.utn.dds.k3003.config;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -9,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class MetricsService {
 
+@Autowired
     private final MeterRegistry meterRegistry;
 
     public MetricsService(MeterRegistry meterRegistry) {

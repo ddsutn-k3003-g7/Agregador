@@ -35,7 +35,9 @@ public class FuenteController {
             return ResponseEntity.ok(fachadaAgregador.fuentes());
         } finally {
             metricsService.stopTimer(timer, "get_fuentes.tiempo_consulta",
-                    "service", "agregador_api");
+            "service", "agregador_api");
+            metricsService.incrementCounter("agregador.get_fuentes",
+            "service", "agregador_api");
         }
 
     }
