@@ -47,8 +47,10 @@ public class ColeccionController {
         return ResponseEntity.ok(hechos);
         }finally{
             //metricsService.stopTimer(timer, nombre, null);
-            metricsService.stopTimer(timer, "hechos.tiempo_consulta", 
+            metricsService.stopTimer(timer, "agregador.get_hechos.tiempo_consulta", 
                 "service", "agregador_api");
+            metricsService.incrementCounter("agregador.get_hechos.contador",
+                    "service", "agregador_api");
         }
 
 

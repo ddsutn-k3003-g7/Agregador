@@ -34,9 +34,9 @@ public class FuenteController {
         try {
             return ResponseEntity.ok(fachadaAgregador.fuentes());
         } finally {
-            metricsService.stopTimer(timer, "get_fuentes.tiempo_consulta",
+            metricsService.stopTimer(timer, "agregador.get_fuentes.tiempo_consulta",
             "service", "agregador_api");
-            metricsService.incrementCounter("agregador.get_fuentes",
+            metricsService.incrementCounter("agregador.get_fuentes.contador",
             "service", "agregador_api");
         }
 
@@ -50,8 +50,12 @@ public class FuenteController {
         try {
             return ResponseEntity.ok(fachadaAgregador.agregar(fuente));
         } finally {
-            metricsService.stopTimer(timer, "post_fuentes.tiempo_consulta",
+            metricsService.stopTimer(timer, "agregador.post_fuentes.tiempo_consulta",
                     "service", "agregador_api");
+
+            metricsService.incrementCounter("agregador.post_fuentes.contador",
+                    "service", "agregador_api");
+
         }
 
     }
