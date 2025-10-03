@@ -1,7 +1,7 @@
 package ar.edu.utn.dds.k3003.controller;
 
 import ar.edu.utn.dds.k3003.config.MetricsService;
-import ar.edu.utn.dds.k3003.facades.FachadaAgregador;
+import ar.edu.utn.dds.k3003.service.FachadaAgregador;
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
 import io.micrometer.core.instrument.Timer;
 import lombok.extern.slf4j.Slf4j;
