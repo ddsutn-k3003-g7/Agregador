@@ -1,8 +1,10 @@
 package ar.edu.utn.dds.k3003.app;
 
+import ar.edu.utn.dds.k3003.app.strategies.ConsensoStrategy;
+import ar.edu.utn.dds.k3003.app.strategies.ConsensoStrategyFactory;
 import ar.edu.utn.dds.k3003.cliente.FuentesProxy;
 import ar.edu.utn.dds.k3003.config.GlobalExceptionHandler;
-import ar.edu.utn.dds.k3003.facades.FachadaAgregador;
+import ar.edu.utn.dds.k3003.service.FachadaAgregador;
 import ar.edu.utn.dds.k3003.facades.FachadaFuente;
 import ar.edu.utn.dds.k3003.facades.dtos.FuenteDTO;
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
@@ -12,7 +14,7 @@ import ar.edu.utn.dds.k3003.repository.FuenteRepository;
 import ar.edu.utn.dds.k3003.repository.ConsensoRepository;
 import ar.edu.utn.dds.k3003.repository.InMemoryFuenteRepo;
 import ar.edu.utn.dds.k3003.repository.InMemoryConsensoRepo;
-import ar.edu.utn.dds.k3003.facades.dtos.ConsensosEnum;
+import ar.edu.utn.dds.k3003.model.ConsensosEnum;
 import ar.edu.utn.dds.k3003.facades.dtos.Constants;
 
 import java.util.List;
@@ -36,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.WebProperties.Resources.Chain.Strategy;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,6 +49,7 @@ public class Fachada implements FachadaAgregador {
     private ObjectMapper objectMapper;
     private final FuenteRepository fuenteRepository;
     private final ConsensoRepository consensoRepository; // Inicializa el repositorio de consensos en memoria
+    private ConsensoStrategyFactory strategyFactory;
     private Map<String, FachadaFuente> fachadas = new HashMap<>();
     public Fachada() {
         this.fuenteRepository = new InMemoryFuenteRepo(); // Inicializa el repositorio de fuentes en memoria
@@ -53,7 +57,7 @@ public class Fachada implements FachadaAgregador {
     }
 
     @Autowired
-    public Fachada(FuenteRepository fuenteRepository, ConsensoRepository consensoRepository) {
+    public Fachada(FuenteRepository fuenteRepository, ConsensoRepository consensoRepository, ConsensoStrategyFactory strategyFactory) {
         this.fuenteRepository = fuenteRepository; // Inyecta el repositorio de fuentes
         this.consensoRepository = consensoRepository; // Inyecta el repositorio de consensos
         
@@ -65,6 +69,8 @@ public class Fachada implements FachadaAgregador {
         var sdf = new SimpleDateFormat(Constants.DEFAULT_SERIALIZATION_FORMAT, Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         objectMapper.setDateFormat(sdf);
+
+        this.strategyFactory = strategyFactory;
         
         //cargar fuentes desde postgres
         List<Fuente> fuentes = fuenteRepository.findAll();
@@ -145,41 +151,18 @@ public class Fachada implements FachadaAgregador {
 
         log.info("hechos encontrados: {}", hechos.size());
 
+        ConsensoStrategy strategy = strategyFactory.getStrategy(tipoConsenso);
+
         // aplicar el consenso
-        if (tipoConsenso == ConsensosEnum.AL_MENOS_2 && fachadas.size() >= 2) {
-            log.info("Aplicando consenso AL_MENOS_2 con {} fuentes", fachadas.size());
-
-            // Paso 1: Contar ocurrencias de cada título
-            Map<String, Long> conteoTitulos = hechos.stream()
-                    .filter(hecho -> hecho.titulo() != null && !hecho.titulo().isEmpty())
-                    .collect(Collectors.groupingBy(
-                            HechoDTO::titulo,
-                            Collectors.counting()));
-
-            log.info("Conteo de títulos: {}", conteoTitulos);
-
-            // Paso 2: Filtrar para mantener solo los que tienen conteo > 1 (duplicados)
-            List<HechoDTO> hechosDuplicados = hechos.stream()
-                    .filter(hecho -> hecho.titulo() != null &&
-                            !hecho.titulo().isEmpty() &&
-                            conteoTitulos.getOrDefault(hecho.titulo(), 0L) > 1)
-                    .collect(Collectors.toList());
-
-            log.info("Hechos después de filtro AL_MENOS_2: {}", hechosDuplicados.size());
-            hechos = hechosDuplicados;
-
-        } else if (tipoConsenso == ConsensosEnum.TODOS) {
-            log.info("Aplicando consenso TODOS, hechos sin filtrar: {}", hechos.size());
-            // se devuelven todos los hechos sin filtrar
-        } else if (tipoConsenso == ConsensosEnum.AL_MENOS_2 && fachadas.size() < 2) {
+         if (tipoConsenso == ConsensosEnum.AL_MENOS_2 && fachadas.size() < 2) {
             log.warn("Consenso AL_MENOS_2 requerido pero solo hay {} fuentes", fachadas.size());
-        } else {
-            log.warn("Tipo de consenso no soportado: {}", tipoConsenso);
-            throw new IllegalArgumentException("Tipo de consenso no soportado: " + tipoConsenso);
-        }
+            strategy = strategyFactory.getStrategy(ConsensosEnum.TODOS);
+        } 
+        
+        hechos = strategy.aplicarConsenso(hechos);
 
-        // Eliminar duplicados (solo para AL_MENOS_2 y TODOS)
-        if (tipoConsenso == ConsensosEnum.AL_MENOS_2 || tipoConsenso == ConsensosEnum.TODOS) {
+        // Eliminar duplicados 
+        //if (tipoConsenso == ConsensosEnum.AL_MENOS_2 || tipoConsenso == ConsensosEnum.TODOS) {
             Set<String> titulosVistos = new HashSet<>();
             hechos = hechos.stream()
                     .filter(hecho -> {
@@ -196,7 +179,7 @@ public class Fachada implements FachadaAgregador {
                     .collect(Collectors.toList());
 
             log.info("Hechos finales después de eliminar duplicados: {}", hechos.size());
-        }
+        //}
 
         return hechos;
     };

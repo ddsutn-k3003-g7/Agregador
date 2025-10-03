@@ -1,7 +1,8 @@
 package ar.edu.utn.dds.k3003.repository;
 
 import ar.edu.utn.dds.k3003.model.Consenso;
-import ar.edu.utn.dds.k3003.facades.dtos.ConsensosEnum;
+//import ar.edu.utn.dds.k3003.facades.dtos.ConsensosEnum;
+import ar.edu.utn.dds.k3003.model.ConsensosEnum;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

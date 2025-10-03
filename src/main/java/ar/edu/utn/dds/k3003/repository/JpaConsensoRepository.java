@@ -1,12 +1,12 @@
 package ar.edu.utn.dds.k3003.repository;
 
 import ar.edu.utn.dds.k3003.model.Consenso;
+import ar.edu.utn.dds.k3003.model.ConsensosEnum;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ar.edu.utn.dds.k3003.facades.dtos.ConsensosEnum;
 import java.util.Optional;
 
 @Repository
