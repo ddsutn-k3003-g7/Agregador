@@ -8,6 +8,7 @@ import ar.edu.utn.dds.k3003.facades.FachadaSolicitudes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.http.HttpStatus;
 
+import java.lang.reflect.Method;
 import java.util.*;
 import lombok.SneakyThrows;
 import retrofit2.Call;
@@ -37,6 +38,10 @@ public class SolicitudesProxy implements FachadaSolicitudes{
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .build();
+          
+            if (objectMapper != null) {
+              throw new IllegalStateException("Service no inicializado");
+            }
 
     var retrofit =
         new Retrofit.Builder()
@@ -66,6 +71,12 @@ public class SolicitudesProxy implements FachadaSolicitudes{
     
         log.info("Creando llamada al servicio Solicitudes...");
 
+        log.info("2. Service methods available:");
+        Method[] methods = this.service.getClass().getDeclaredMethods();
+        for (Method method : methods) {
+            log.info("   - {}", method.getName());
+        }
+
         if (this.service == null) {
           log.error("❌ SERVICE ES NULL! No se inicializó correctamente");
           throw new IllegalStateException("Service no inicializado");
@@ -73,7 +84,7 @@ public class SolicitudesProxy implements FachadaSolicitudes{
         log.info("Endpoint base: {}", this.endpoint);
         //Response<List<SolicitudDTO>> response = this.service.get(hechoId).execute();
         log.info("ANTES de execute() - hechoId: {}", hechoId);
-        Call<List<SolicitudDTO>> call = this.service.get("4c2696f2-d4fa-42f4-8056-3165a473275e");
+        Call<List<SolicitudDTO>> call = this.service.get(hechoId);
 
         log.info("🚀 EJECUTANDO call.execute()...");
         Response<List<SolicitudDTO>> response = call.execute();
