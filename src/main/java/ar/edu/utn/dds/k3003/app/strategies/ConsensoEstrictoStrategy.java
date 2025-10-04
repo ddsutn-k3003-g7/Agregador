@@ -9,9 +9,10 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
-
+import lombok.extern.slf4j.Slf4j;
 import ar.edu.utn.dds.k3003.cliente.SolicitudesProxy;
 
+@Slf4j
 @Component
 public class ConsensoEstrictoStrategy implements ConsensoStrategy{
     private final SolicitudesProxy solicitudesProxy;
@@ -25,6 +26,7 @@ public class ConsensoEstrictoStrategy implements ConsensoStrategy{
     }
    @Override
    public List<HechoDTO> aplicarConsenso(List<HechoDTO> hechos){
+        log.info("llamando a solitudes por los hechos");
       hechos = hechos.stream()
                .filter(hecho -> {
                      return !solicitudesProxy.buscarSolicitudXHecho(hecho.id()).isEmpty();

@@ -29,7 +29,7 @@ public class SolicitudesProxy implements FachadaSolicitudes{
     public SolicitudesProxy(ObjectMapper objectMapper) {
 
     var env = System.getenv();
-    this.endpoint = env.getOrDefault("URL_FUENTES", "https://two025-tp-entrega-3-solicitudes.onrender.com/");
+    this.endpoint = env.getOrDefault("URL_SOLICITUDES", "https://two025-tp-entrega-3-solicitudes.onrender.com/");
 
      // Configurar OkHttpClient con logging y timeouts
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -64,9 +64,14 @@ public class SolicitudesProxy implements FachadaSolicitudes{
   public List<SolicitudDTO> buscarSolicitudXHecho(String hechoId) throws NoSuchElementException{
     log.info("Proxy: buscando solicitudes por hecho: {}", hechoId);
     
-        log.info("Creando llamada al servicio...");
+        log.info("Creando llamada al servicio Solicitudes...");
 
-        Response<List<SolicitudDTO>> response = this.service.get(hechoId).execute();
+        //Response<List<SolicitudDTO>> response = this.service.get(hechoId).execute();
+        log.info("ANTES de execute() - hechoId: {}", hechoId);
+        Call<List<SolicitudDTO>> call = this.service.get(hechoId);
+
+        log.info("🚀 EJECUTANDO call.execute()...");
+        Response<List<SolicitudDTO>> response = call.execute();
 
         log.info("Respuesta recibida, código: {}", response.code());
         
