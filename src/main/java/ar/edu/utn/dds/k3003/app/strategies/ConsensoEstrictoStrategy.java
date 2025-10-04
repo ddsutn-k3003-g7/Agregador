@@ -29,7 +29,7 @@ public class ConsensoEstrictoStrategy implements ConsensoStrategy{
         log.info("llamando a solitudes por los hechos");
       hechos = hechos.stream()
                .filter(hecho -> {
-                     return !solicitudesProxy.buscarSolicitudXHecho(hecho.id()).isEmpty();
+                     return solicitudesProxy.buscarSolicitudXHecho(hecho.id()).isEmpty();
                })
                .collect(Collectors.toList());;
     return hechos;

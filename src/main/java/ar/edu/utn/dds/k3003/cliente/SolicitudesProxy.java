@@ -40,7 +40,7 @@ public class SolicitudesProxy implements FachadaSolicitudes{
             .build();
           
             if (objectMapper != null) {
-              throw new IllegalStateException("Service no inicializado");
+              //throw new IllegalStateException("Service no inicializado");
             }
 
     var retrofit =
