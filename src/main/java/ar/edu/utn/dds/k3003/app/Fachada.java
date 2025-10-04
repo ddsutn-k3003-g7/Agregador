@@ -5,9 +5,10 @@ import ar.edu.utn.dds.k3003.app.strategies.ConsensoStrategyFactory;
 import ar.edu.utn.dds.k3003.cliente.FuentesProxy;
 import ar.edu.utn.dds.k3003.config.GlobalExceptionHandler;
 import ar.edu.utn.dds.k3003.service.FachadaAgregador;
-import ar.edu.utn.dds.k3003.facades.FachadaFuente;
+import ar.edu.utn.dds.k3003.service.FachadaFuente;
 import ar.edu.utn.dds.k3003.facades.dtos.FuenteDTO;
-import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
+import ar.edu.utn.dds.k3003.model.HechoDTO;
+
 import ar.edu.utn.dds.k3003.model.Fuente;
 import ar.edu.utn.dds.k3003.model.Consenso;
 import ar.edu.utn.dds.k3003.repository.FuenteRepository;

@@ -8,30 +8,33 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
+import ar.edu.utn.dds.k3003.model.HechoDTO;
 import lombok.extern.slf4j.Slf4j;
 import ar.edu.utn.dds.k3003.cliente.SolicitudesProxy;
 
 @Slf4j
 @Component
 public class ConsensoEstrictoStrategy implements ConsensoStrategy{
-    private final SolicitudesProxy solicitudesProxy;
+    //private final SolicitudesProxy solicitudesProxy;
     private final ObjectMapper objectMapper;
     
     @Autowired
     public ConsensoEstrictoStrategy(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         // Crear el proxy inyectando ObjectMapper
-        this.solicitudesProxy = new SolicitudesProxy(objectMapper);
+        //this.solicitudesProxy = new SolicitudesProxy(objectMapper);
     }
    @Override
    public List<HechoDTO> aplicarConsenso(List<HechoDTO> hechos){
         log.info("llamando a solitudes por los hechos");
       hechos = hechos.stream()
                .filter(hecho -> {
-                     return solicitudesProxy.buscarSolicitudXHecho(hecho.id()).isEmpty();
+                return estaActivo(hecho);
                })
                .collect(Collectors.toList());;
     return hechos;
+   }
+   private boolean estaActivo(HechoDTO hecho) {
+    return hecho.estado() == "activo";
    }
 }

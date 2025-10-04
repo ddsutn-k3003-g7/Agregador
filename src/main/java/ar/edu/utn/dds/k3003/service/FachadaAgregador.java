@@ -4,11 +4,11 @@ import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import ar.edu.utn.dds.k3003.facades.FachadaFuente;
+import ar.edu.utn.dds.k3003.service.FachadaFuente;
 //import ar.edu.utn.dds.k3003.facades.dtos.ConsensosEnum;
 import ar.edu.utn.dds.k3003.model.ConsensosEnum;
 import ar.edu.utn.dds.k3003.facades.dtos.FuenteDTO;
-import ar.edu.utn.dds.k3003.facades.dtos.HechoDTO;
+import ar.edu.utn.dds.k3003.model.HechoDTO;
 
 public interface FachadaAgregador {
       FuenteDTO agregar(FuenteDTO fuente);

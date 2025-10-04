@@ -1,8 +1,11 @@
 package ar.edu.utn.dds.k3003.cliente;
 
-import ar.edu.utn.dds.k3003.facades.dtos.*;
-import ar.edu.utn.dds.k3003.facades.FachadaFuente;
+import ar.edu.utn.dds.k3003.service.FachadaFuente;
 import ar.edu.utn.dds.k3003.facades.FachadaProcesadorPdI;
+import ar.edu.utn.dds.k3003.facades.dtos.ColeccionDTO;
+import ar.edu.utn.dds.k3003.facades.dtos.PdIDTO;
+import ar.edu.utn.dds.k3003.model.HechoDTO;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.http.HttpStatus;
 
