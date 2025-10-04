@@ -73,7 +73,7 @@ public class SolicitudesProxy implements FachadaSolicitudes{
         log.info("Endpoint base: {}", this.endpoint);
         //Response<List<SolicitudDTO>> response = this.service.get(hechoId).execute();
         log.info("ANTES de execute() - hechoId: {}", hechoId);
-        Call<List<SolicitudDTO>> call = this.service.get(hechoId);
+        Call<List<SolicitudDTO>> call = this.service.get("4c2696f2-d4fa-42f4-8056-3165a473275e");
 
         log.info("🚀 EJECUTANDO call.execute()...");
         Response<List<SolicitudDTO>> response = call.execute();
