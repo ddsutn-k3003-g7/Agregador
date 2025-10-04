@@ -35,6 +35,6 @@ public class ConsensoEstrictoStrategy implements ConsensoStrategy{
     return hechos;
    }
    private boolean estaActivo(HechoDTO hecho) {
-    return hecho.estado() == "activo";
+    return hecho.estado().equals("activo");
    }
 }
