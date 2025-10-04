@@ -30,7 +30,7 @@ public class SolicitudesProxy implements FachadaSolicitudes{
 
     var env = System.getenv();
     this.endpoint = env.getOrDefault("URL_SOLICITUDES", "https://two025-tp-entrega-3-solicitudes.onrender.com/");
-
+ 
      // Configurar OkHttpClient con logging y timeouts
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -66,6 +66,11 @@ public class SolicitudesProxy implements FachadaSolicitudes{
     
         log.info("Creando llamada al servicio Solicitudes...");
 
+        if (this.service == null) {
+          log.error("❌ SERVICE ES NULL! No se inicializó correctamente");
+          throw new IllegalStateException("Service no inicializado");
+        }
+        log.info("Endpoint base: {}", this.endpoint);
         //Response<List<SolicitudDTO>> response = this.service.get(hechoId).execute();
         log.info("ANTES de execute() - hechoId: {}", hechoId);
         Call<List<SolicitudDTO>> call = this.service.get(hechoId);
