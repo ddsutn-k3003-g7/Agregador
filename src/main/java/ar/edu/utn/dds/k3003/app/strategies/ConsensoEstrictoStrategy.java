@@ -15,14 +15,14 @@ import ar.edu.utn.dds.k3003.cliente.SolicitudesProxy;
 @Slf4j
 @Component
 public class ConsensoEstrictoStrategy implements ConsensoStrategy{
-    //private final SolicitudesProxy solicitudesProxy;
+    private final SolicitudesProxy solicitudesProxy;
     private final ObjectMapper objectMapper;
     
     @Autowired
     public ConsensoEstrictoStrategy(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         // Crear el proxy inyectando ObjectMapper
-        //this.solicitudesProxy = new SolicitudesProxy(objectMapper);
+       this.solicitudesProxy = new SolicitudesProxy(objectMapper);
     }
    @Override
    public List<HechoDTO> aplicarConsenso(List<HechoDTO> hechos){
@@ -35,6 +35,6 @@ public class ConsensoEstrictoStrategy implements ConsensoStrategy{
     return hechos;
    }
    private boolean estaActivo(HechoDTO hecho) {
-    return hecho.estado().equals("activo");
+    return solicitudesProxy.buscarSolicitudXHecho(hecho.id()).isEmpty();
    }
 }
