@@ -24,17 +24,20 @@ public class ConsensoEstrictoStrategy implements ConsensoStrategy{
         // Crear el proxy inyectando ObjectMapper
        this.solicitudesProxy = new SolicitudesProxy(objectMapper);
     }
+
    @Override
    public List<HechoDTO> aplicarConsenso(List<HechoDTO> hechos){
         log.info("llamando a solitudes por los hechos");
+        List<String> hechosConSolicitudes = solicitudesProxy.obtenerHechoIdsUnicos();
       hechos = hechos.stream()
                .filter(hecho -> {
-                return estaActivo(hecho);
+                return !hechosConSolicitudes.contains(hecho.id());
                })
                .collect(Collectors.toList());;
     return hechos;
    }
+
    private boolean estaActivo(HechoDTO hecho) {
-    return solicitudesProxy.buscarSolicitudXHecho(hecho.id()).isEmpty();
+    return !solicitudesProxy.obtenerHechoIdsUnicos().contains(hecho.id());
    }
 }
