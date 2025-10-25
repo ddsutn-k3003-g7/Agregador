@@ -13,6 +13,6 @@ public interface SolicitudesRetrofitClient {
     @GET("solicitudes?hecho={hechoId}")
     Call<List<SolicitudDTO>> get(@Path("hechoId") String hechoId);
 
-    @GET("hechos")
+    @GET("solicitudes/hechos")
     Call<List<String>> getHechos();
 }
