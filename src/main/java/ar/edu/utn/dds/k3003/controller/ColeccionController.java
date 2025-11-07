@@ -33,8 +33,8 @@ public class ColeccionController {
     @GetMapping("/{nombre}/hechos")
     public ResponseEntity<List<HechoDTO>> hechosDeColeccion(
             @PathVariable String nombre,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "20") int size) {
 
         Timer.Sample timer = metricsService.startTimer();
 
