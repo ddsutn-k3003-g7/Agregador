@@ -32,28 +32,13 @@ public class ColeccionController {
 
     @GetMapping("/{nombre}/hechos")
     public ResponseEntity<List<HechoDTO>> hechosDeColeccion(
-            @PathVariable String nombre/* ,
-            @RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "20") int size*/) {
+            @PathVariable String nombre) {
 
         Timer.Sample timer = metricsService.startTimer();
 
         try{
         List<HechoDTO> hechos = fachadaAgregador.hechos(nombre);
         log.info("Hechos encontrados: {}", hechos.size());
-        /* 
-        if (hechos.size() > (page * size)) {
-            fromIndex = Math.min(page * size, hechos.size());
-        }
-        if (hechos.size() > (page * size) + size) {
-            toIndex = Math.min((page * size) + size, hechos.size());
-        }else{
-            toIndex = hechos.size();
-        }
-        
-        List<HechoDTO> hechosPagina= hechos.subList(fromIndex, toIndex);
-        */
-
         ObjectMapper mapper = new ObjectMapper();
         try {
             String json = mapper.writeValueAsString(hechos);
@@ -61,12 +46,14 @@ public class ColeccionController {
             e.printStackTrace();
         }
         return ResponseEntity.ok(hechos);
-    } finally {
+        }finally{
             //metricsService.stopTimer(timer, nombre, null);
             metricsService.stopTimer(timer, "agregador.get_hechos.tiempo_consulta", 
                 "service", "agregador_api");
             metricsService.incrementCounter("agregador.get_hechos.contador",
                     "service", "agregador_api");
         }
+
+
     }
 }
