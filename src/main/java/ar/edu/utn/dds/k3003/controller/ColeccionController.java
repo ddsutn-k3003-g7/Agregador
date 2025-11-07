@@ -41,8 +41,6 @@ public class ColeccionController {
         try{
         List<HechoDTO> hechos = fachadaAgregador.hechos(nombre);
         log.info("Hechos encontrados: {}", hechos.size());
-        int fromIndex = 0;
-        int toIndex = 0;
         /* 
         if (hechos.size() > (page * size)) {
             fromIndex = Math.min(page * size, hechos.size());
