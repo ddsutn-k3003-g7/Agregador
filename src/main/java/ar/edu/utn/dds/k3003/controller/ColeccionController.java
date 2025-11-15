@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -44,6 +45,19 @@ public class ColeccionController {
         int fromIndex = 0;
         int toIndex = 0;
         List<HechoDTO> hechosPagina = null;
+
+        // Calcular fromIndex
+        fromIndex = page * size;
+
+        // Si fromIndex es mayor o igual al tamaño de la lista, no hay elementos
+        if (fromIndex >= hechos.size()) {
+            hechosPagina = new ArrayList<>(); // Lista vacía para páginas fuera de rango
+        } else {
+            // Calcular toIndex
+            toIndex = Math.min(fromIndex + size, hechos.size());
+            hechosPagina = hechos.subList(fromIndex, toIndex);
+        }
+        /*
         if (hechos.size() > (page * size)) {
             fromIndex = Math.min(page * size, hechos.size());
         }else{
@@ -54,6 +68,7 @@ public class ColeccionController {
         }else if (hechos.size() <= (page * size) + size) {
             toIndex = hechos.size() - 1;
         }
+        */
 
         hechosPagina= hechos.subList(fromIndex, toIndex);
 
