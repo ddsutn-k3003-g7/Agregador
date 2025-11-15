@@ -49,20 +49,12 @@ public class ColeccionController {
         // Calcular fromIndex
         fromIndex = page * size;
 
-        // Si fromIndex está fuera de rango, ajustar a la última página disponible
+        // Si fromIndex está fuera de rango, devolver lista vacía
         if (fromIndex >= hechos.size()) {
-            // Calcular la última página que tiene datos
-            int lastPage = (hechos.size() - 1) / size;
-            fromIndex = lastPage * size;
-        }
-
-        // Calcular toIndex (nunca debe exceder el tamaño de la lista)
-        toIndex = Math.min(fromIndex + size, hechos.size());
-
-        // Asegurarse de que fromIndex no sea mayor que toIndex
-        if (fromIndex >= toIndex) {
             hechosPagina = new ArrayList<>();
         } else {
+            // Calcular toIndex
+            toIndex = Math.min(fromIndex + size, hechos.size());
             hechosPagina = hechos.subList(fromIndex, toIndex);
         }
         /*
@@ -76,9 +68,9 @@ public class ColeccionController {
         }else if (hechos.size() <= (page * size) + size) {
             toIndex = hechos.size() - 1;
         }
-        */
-
+        
         hechosPagina= hechos.subList(fromIndex, toIndex);
+        */
 
         ObjectMapper mapper = new ObjectMapper();
         try {
