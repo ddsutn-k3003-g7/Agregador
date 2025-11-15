@@ -49,12 +49,20 @@ public class ColeccionController {
         // Calcular fromIndex
         fromIndex = page * size;
 
-        // Si fromIndex es mayor o igual al tamaño de la lista, no hay elementos
+        // Si fromIndex está fuera de rango, ajustar a la última página disponible
         if (fromIndex >= hechos.size()) {
-            hechosPagina = new ArrayList<>(); // Lista vacía para páginas fuera de rango
+            // Calcular la última página que tiene datos
+            int lastPage = (hechos.size() - 1) / size;
+            fromIndex = lastPage * size;
+        }
+
+        // Calcular toIndex (nunca debe exceder el tamaño de la lista)
+        toIndex = Math.min(fromIndex + size, hechos.size());
+
+        // Asegurarse de que fromIndex no sea mayor que toIndex
+        if (fromIndex >= toIndex) {
+            hechosPagina = new ArrayList<>();
         } else {
-            // Calcular toIndex
-            toIndex = Math.min(fromIndex + size, hechos.size());
             hechosPagina = hechos.subList(fromIndex, toIndex);
         }
         /*
