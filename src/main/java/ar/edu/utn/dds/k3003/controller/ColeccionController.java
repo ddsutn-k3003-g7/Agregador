@@ -49,6 +49,8 @@ public class ColeccionController {
         }
         if (hechos.size() > (page * size) + size) {
             toIndex = Math.min((page * size) + (size - 1), hechos.size());
+        }else if (hechos.size() <= (page * size) + size) {
+            toIndex = (page * size) + size;
         }
 
         hechosPagina= hechos.subList(fromIndex, toIndex);
