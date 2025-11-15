@@ -1,10 +1,10 @@
 # Importing JDK and copying required files
-FROM maven:3.8.6-openjdk-18 AS build
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 
 COPY . .
 RUN mvn clean package -DskipTests
 
-FROM openjdk:18-jdk
+FROM eclipse-temurin:17-jre
 
 # Copy the JAR from the build stage
 COPY --from=build /target/*.jar app.jar
