@@ -46,9 +46,11 @@ public class ColeccionController {
         List<HechoDTO> hechosPagina = null;
         if (hechos.size() > (page * size)) {
             fromIndex = Math.min(page * size, hechos.size());
+        }else{
+            fromIndex = hechos.size() - 1;
         }
         if (hechos.size() > (page * size) + size) {
-            toIndex = Math.min((page * size) + (size - 1), hechos.size());
+            toIndex = Math.min((page * size) + size, hechos.size());
         }else if (hechos.size() <= (page * size) + size) {
             toIndex = hechos.size() - 1;
         }
