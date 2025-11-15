@@ -43,16 +43,15 @@ public class ColeccionController {
         log.info("Hechos encontrados: {}", hechos.size());
         int fromIndex = 0;
         int toIndex = 0;
+        List<HechoDTO> hechosPagina = null;
         if (hechos.size() > (page * size)) {
             fromIndex = Math.min(page * size, hechos.size());
         }
         if (hechos.size() > (page * size) + size) {
             toIndex = Math.min((page * size) + size, hechos.size());
-        }else{
-            toIndex = hechos.size();
         }
 
-        List<HechoDTO> hechosPagina= hechos.subList(fromIndex, toIndex);
+        hechosPagina= hechos.subList(fromIndex, toIndex);
 
         ObjectMapper mapper = new ObjectMapper();
         try {
